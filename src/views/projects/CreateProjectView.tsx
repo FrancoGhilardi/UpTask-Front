@@ -1,11 +1,14 @@
 import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import ProjectForm from "@/components/projects/ProjectForm";
+import { ProjectFormData } from "@/types/index";
+import { createProject } from "@/api/ProjectApi";
 
-const initialValues = {
+const initialValues: ProjectFormData = {
   projectName: "",
   clientName: "",
-  description: "t",
+  description: "",
 };
 
 const CreateProjectView: React.FC = () => {
@@ -15,9 +18,8 @@ const CreateProjectView: React.FC = () => {
     formState: { errors },
   } = useForm({ defaultValues: initialValues });
 
-  const handleForm = (data) => {
-    console.log({ data });
-  };
+  const handleForm = (data: ProjectFormData) => createProject(data);
+
   return (
     <Fragment>
       <div className="max-w-3xl mx-auto">
@@ -38,6 +40,7 @@ const CreateProjectView: React.FC = () => {
           onSubmit={handleSubmit(handleForm)}
           noValidate
         >
+          <ProjectForm register={register} errors={errors} />
           <input
             type="submit"
             value="Crear Proyecto"
