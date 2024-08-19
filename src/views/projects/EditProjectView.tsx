@@ -1,7 +1,7 @@
+import React from "react";
 import { getProjectById } from "@/api/ProjectApi";
 import EditProjectForm from "@/components/projects/EditProjectForm";
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
 import { Navigate, useParams } from "react-router-dom";
 
 const EditProjectView: React.FC = () => {
