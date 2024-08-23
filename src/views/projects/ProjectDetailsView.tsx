@@ -1,5 +1,6 @@
 import { getProjectById } from "@/api/ProjectApi";
 import AddTaskModal from "@/components/tasks/AddTaskModal";
+import TaskList from "@/components/tasks/TaskList";
 import { useQuery } from "@tanstack/react-query";
 import React, { Fragment } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
@@ -9,6 +10,8 @@ const ProjectDetailsView: React.FC = () => {
   const navigate = useNavigate();
 
   const projectId = params.projectId!;
+
+  const showModal = () => navigate(location.pathname + "?newTask=true");
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["editProject", projectId],
@@ -27,15 +30,16 @@ const ProjectDetailsView: React.FC = () => {
           {data.description}
         </p>
 
-        <nav className="my-0 flex gap-3">
+        <nav className="my-5 flex gap-3">
           <button
             type="button"
             className="bg-purple-400 hover:bg-purple-500 px-10 py-3 text-white text-xl font-bold cursor-pointer transition-colors"
-            onClick={() => navigate(location.pathname + "?newTask=true")}
+            onClick={showModal}
           >
             Agregar Tarea
           </button>
         </nav>
+        <TaskList tasks={data.tasks} />
         <AddTaskModal />
       </Fragment>
     );

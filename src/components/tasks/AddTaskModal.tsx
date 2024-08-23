@@ -1,21 +1,59 @@
 import React, { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import TaskForm from "./TaskFrom";
+import { TaskFormData } from "@/types/index";
+import { useForm } from "react-hook-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import { createTask } from "@/api/TaskApi";
+
+const initialValues: TaskFormData = {
+  name: "",
+  description: "",
+};
 
 const AddTaskModal: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const params = useParams();
   const queryParams = new URLSearchParams(location.search);
   const modalTask = queryParams.get("newTask");
+  const projectId = params.projectId!;
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({ defaultValues: initialValues });
+
+  const { mutate } = useMutation({
+    mutationFn: createTask,
+    onError: (error) => toast.error(error.message),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["editProject", projectId] });
+      toast.success(data);
+      reset();
+      hideModal();
+    },
+  });
+
+  const handleCreateTask = (formData: TaskFormData) => {
+    const data = {
+      formData,
+      projectId,
+    };
+    mutate(data);
+  };
+
+  const hideModal = () => navigate(location.pathname, { replace: true });
 
   return (
     <Fragment>
       <Transition appear show={!!modalTask} as={Fragment}>
-        <Dialog
-          as="div"
-          className="relative z-10"
-          onClose={() => navigate(location.pathname, { replace: true })}
-        >
+        <Dialog as="div" className="relative z-10" onClose={hideModal}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -48,6 +86,18 @@ const AddTaskModal: React.FC = () => {
                     Llena el formulario y crea {""}
                     <span className="text-fuchsia-600">una tarea</span>
                   </p>
+                  <form
+                    className=" mt-10 space-y-3"
+                    noValidate
+                    onSubmit={handleSubmit(handleCreateTask)}
+                  >
+                    <TaskForm register={register} errors={errors} />
+                    <input
+                      type="submit"
+                      value="Guardar Tarea"
+                      className="bg-fuchsia-600 hover:bg-fuchsia-700 w-full p-3 text-white uppercase font-bold cursor-auto transition-colors"
+                    />
+                  </form>
                 </Dialog.Panel>
               </Transition.Child>
             </div>
