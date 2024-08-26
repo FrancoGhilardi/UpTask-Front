@@ -1,5 +1,6 @@
 import { getProjectById } from "@/api/ProjectApi";
 import AddTaskModal from "@/components/tasks/AddTaskModal";
+import EditTaskData from "@/components/tasks/EditTaskData";
 import TaskList from "@/components/tasks/TaskList";
 import { useQuery } from "@tanstack/react-query";
 import React, { Fragment } from "react";
@@ -14,7 +15,7 @@ const ProjectDetailsView: React.FC = () => {
   const showModal = () => navigate(location.pathname + "?newTask=true");
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["editProject", projectId],
+    queryKey: ["project", projectId],
     queryFn: () => getProjectById(projectId),
   });
 
@@ -41,6 +42,7 @@ const ProjectDetailsView: React.FC = () => {
         </nav>
         <TaskList tasks={data.tasks} />
         <AddTaskModal />
+        <EditTaskData />
       </Fragment>
     );
 };
