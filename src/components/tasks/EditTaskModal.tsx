@@ -51,7 +51,8 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ data, taskId }) => {
     mutationFn: updateTask,
     onError: (error) => toast.error(error.message),
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["editProject", projectId] });
+      queryClient.invalidateQueries({ queryKey: ["project", projectId] });
+      queryClient.invalidateQueries({ queryKey: ["task", taskId] });
       toast.success(data);
       reset();
       hideModal();

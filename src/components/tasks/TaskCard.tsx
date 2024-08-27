@@ -26,6 +26,9 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
   const handleEditTask = () =>
     navigate(location.pathname + `?editTask=${task._id}`);
 
+  const handleViewTask = () =>
+    navigate(location.pathname + `?viewTask=${task._id}`);
+
   const { mutate } = useMutation({
     mutationFn: deleteTask,
     onError: (error) => toast.error(error.message),
@@ -66,6 +69,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
                 <button
                   type="button"
                   className="block px-3 py-1 text-sm leading-6 text-gray-900"
+                  onClick={handleViewTask}
                 >
                   Ver Tarea
                 </button>
