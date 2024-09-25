@@ -12,14 +12,16 @@ import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
 
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useAuth } from "@/hooks/useAuth";
+import { isManager } from "@/utils/policies";
 
 const DashBoardView: React.FC = () => {
+  const queryClient = useQueryClient();
+
   const { data, isLoading } = useQuery({
     queryKey: ["projects"],
     queryFn: getProjects,
   });
-
-  const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
     mutationFn: deleteProject,
@@ -30,9 +32,11 @@ const DashBoardView: React.FC = () => {
     },
   });
 
-  if (isLoading) return "Cargando...";
+  const { data: user, isLoading: authLoading } = useAuth();
 
-  if (data)
+  if (isLoading && authLoading) return "Cargando...";
+
+  if (data && user)
     return (
       <Fragment>
         <h1 className="text-5xl font-black">Mis Proyectos</h1>
@@ -59,6 +63,17 @@ const DashBoardView: React.FC = () => {
               >
                 <div className="flex min-w-0 gap-x-4">
                   <div className="min-w-0 flex-auto space-y-2">
+                    <div className="mb-2">
+                      {isManager(project.manager, user._id) ? (
+                        <p className="font-bold text-xs bg-indigo-50 text-indigo-500 border-2 border-indigo-500 rounded-lg inline-block py-1 px-5">
+                          Manager
+                        </p>
+                      ) : (
+                        <p className="font-bold text-xs bg-green-50 text-green-500 border-2 border-green-500 rounded-lg inline-block py-1 px-5">
+                          Colaborador
+                        </p>
+                      )}
+                    </div>
                     <Link
                       to={`/projects/${project._id}`}
                       className="text-gray-600 cursor-pointer hover:underline text-3xl font-bold"
@@ -100,23 +115,27 @@ const DashBoardView: React.FC = () => {
                             Ver Proyecto
                           </Link>
                         </MenuItem>
-                        <MenuItem>
-                          <Link
-                            to={`/projects/${project._id}/edit`}
-                            className="block px-3 py-1 text-sm leading-6 text-gray-900"
-                          >
-                            Editar Proyecto
-                          </Link>
-                        </MenuItem>
-                        <MenuItem>
-                          <button
-                            type="button"
-                            className="block px-3 py-1 text-sm leading-6 text-red-500"
-                            onClick={() => mutate(project._id)}
-                          >
-                            Eliminar Proyecto
-                          </button>
-                        </MenuItem>
+                        {isManager(project.manager, user._id) && (
+                          <>
+                            <MenuItem>
+                              <Link
+                                to={`/projects/${project._id}/edit`}
+                                className="block px-3 py-1 text-sm leading-6 text-gray-900"
+                              >
+                                Editar Proyecto
+                              </Link>
+                            </MenuItem>
+                            <MenuItem>
+                              <button
+                                type="button"
+                                className="block px-3 py-1 text-sm leading-6 text-red-500"
+                                onClick={() => mutate(project._id)}
+                              >
+                                Eliminar Proyecto
+                              </button>
+                            </MenuItem>
+                          </>
+                        )}
                       </MenuItems>
                     </Transition>
                   </Menu>

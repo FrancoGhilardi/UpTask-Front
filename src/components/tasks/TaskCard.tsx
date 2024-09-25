@@ -15,9 +15,10 @@ import { toast } from "react-toastify";
 
 type TaskCardProps = {
   task: Task;
+  canEdit: boolean;
 };
 
-const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
+const TaskCard: React.FC<TaskCardProps> = ({ task, canEdit }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const params = useParams();
@@ -44,6 +45,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
         <button
           type="button"
           className=" text-xl font-bold text-slate-600 text-left"
+          onClick={handleViewTask}
         >
           {task.name}
         </button>
@@ -74,25 +76,28 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
                   Ver Tarea
                 </button>
               </MenuItem>
-              <MenuItem>
-                <button
-                  type="button"
-                  className="block px-3 py-1 text-sm leading-6 text-gray-900"
-                  onClick={handleEditTask}
-                >
-                  Editar Tarea
-                </button>
-              </MenuItem>
-
-              <MenuItem>
-                <button
-                  type="button"
-                  className="block px-3 py-1 text-sm leading-6 text-red-500"
-                  onClick={() => mutate({ projectId, taskId: task._id })}
-                >
-                  Eliminar Tarea
-                </button>
-              </MenuItem>
+              {canEdit && (
+                <>
+                  <MenuItem>
+                    <button
+                      type="button"
+                      className="block px-3 py-1 text-sm leading-6 text-gray-900"
+                      onClick={handleEditTask}
+                    >
+                      Editar Tarea
+                    </button>
+                  </MenuItem>
+                  <MenuItem>
+                    <button
+                      type="button"
+                      className="block px-3 py-1 text-sm leading-6 text-red-500"
+                      onClick={() => mutate({ projectId, taskId: task._id })}
+                    >
+                      Eliminar Tarea
+                    </button>
+                  </MenuItem>
+                </>
+              )}
             </MenuItems>
           </Transition>
         </Menu>
