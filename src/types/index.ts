@@ -52,6 +52,13 @@ export const taskSchema = z.object({
   project: z.string(),
   description: z.string(),
   status: taskStatusSchema,
+  completedBy: z.array(
+    z.object({
+      _id: z.string(),
+      user: userSchema,
+      status: taskStatusSchema,
+    })
+  ),
   createdAt: z.string(),
   updatedAt: z.string(),
 });
@@ -64,6 +71,7 @@ export const projectSchema = z.object({
   projectName: z.string(),
   clientName: z.string(),
   description: z.string(),
+  manager: z.string(userSchema.pick({ _id: true })),
 });
 
 export const dashboardProjectSchema = z.array(
@@ -72,6 +80,7 @@ export const dashboardProjectSchema = z.array(
     projectName: true,
     clientName: true,
     description: true,
+    manager: true,
   })
 );
 
@@ -81,3 +90,14 @@ export type ProjectFormData = Pick<
   Project,
   "projectName" | "clientName" | "description"
 >;
+
+/** Team */
+export const teamMemberSchema = userSchema.pick({
+  name: true,
+  email: true,
+  _id: true,
+});
+
+export const teamMembersSchema = z.array(teamMemberSchema);
+export type TeamMember = z.infer<typeof teamMemberSchema>;
+export type TeamMemberForm = Pick<TeamMember, "email">;
