@@ -6,18 +6,25 @@ import {
   Transition,
   TransitionChild,
 } from "@headlessui/react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import {
+  Navigate,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getTaskById, updateStatus } from "@/api/TaskApi";
 import { toast } from "react-toastify";
 import { formatDate } from "@/utils/utils";
 import { statusTranslations } from "@/locales/es";
 import { TaskStatus } from "@/types/index";
+import NotesPanel from "../notes/NotesPanel";
 
 const TaskModalDetails: React.FC = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const params = useParams();
+  const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const taskId = queryParams.get("viewTask")!;
   const showModal = taskId ? true : false;
@@ -99,20 +106,24 @@ const TaskModalDetails: React.FC = () => {
                     <p className="text-lg text-slate-500 mb-2">
                       Descripción: {data.description}
                     </p>
-                    <p className="text-2xl text-slate-500 mb-2">
-                      Historial de Cambios
-                    </p>
-                    <ul className="list-decimal">
-                      {data.completedBy.map((activityLog) => (
-                        <li key={activityLog._id}>
-                          <span className="font-bold text-slate-600">
-                            {statusTranslations[activityLog.status]}
-                          </span>
-                          {" por: "}
-                          {activityLog.user.name}
-                        </li>
-                      ))}
-                    </ul>
+                    {data.completedBy.length ? (
+                      <>
+                        <p className="font-bold text-2xl text-slate-600 my-5">
+                          Historial de Cambios
+                        </p>
+                        <ul className="list-decimal ml-5">
+                          {data.completedBy.map((activityLog) => (
+                            <li key={activityLog._id}>
+                              <span className="font-bold text-slate-600">
+                                {statusTranslations[activityLog.status]}
+                              </span>
+                              {" por: "}
+                              {activityLog.user.name}
+                            </li>
+                          ))}
+                        </ul>
+                      </>
+                    ) : null}
                     <div className="my-5 space-y-3">
                       <label className="font-bold">
                         Estado Actual:
@@ -131,6 +142,7 @@ const TaskModalDetails: React.FC = () => {
                         </select>
                       </label>
                     </div>
+                    <NotesPanel notes={data.notes} />
                   </DialogPanel>
                 </TransitionChild>
               </div>
