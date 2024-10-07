@@ -16,6 +16,7 @@ import ProjectTeamView from "./views/projects/ProjectTeamView";
 import ProfileView from "./views/profile/ProfileView";
 import ChangePasswordView from "./views/profile/ChangePasswordView";
 import ProfileLayouts from "./layouts/ProfileLayouts";
+import NotFound from "./views/404/NotFound";
 
 const Router: React.FC = () => {
   return (
@@ -51,6 +52,9 @@ const Router: React.FC = () => {
             element={<ForgotPasswordView />}
           />
           <Route path="/auth/new-password" element={<NewPasswordView />} />
+        </Route>
+        <Route element={<AuthLayouts />}>
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </BrowserRouter>
