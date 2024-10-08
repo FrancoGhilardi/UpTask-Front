@@ -1,50 +1,28 @@
-# React + TypeScript + Vite
+# Administrador de Tareas para Proyectos Empresariales
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este proyecto es una plataforma de gestión de tareas diseñada para proyectos empresariales. El objetivo es facilitar la organización y control de las tareas dentro de un equipo de trabajo, proporcionando una interfaz intuitiva y fácil de usar.
 
-Currently, two official plugins are available:
+## Tecnologías Utilizadas
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+El proyecto fue desarrollado utilizando las siguientes tecnologías:
 
-## Expanding the ESLint configuration
+- **React**: Biblioteca principal para la construcción de la interfaz de usuario.
+- **Vite**: Herramienta rápida de desarrollo que ofrece tiempos de carga rápidos y un entorno de desarrollo ágil.
+- **Zod**: Utilizado para la validación de esquemas en el frontend.
+- **TanStack Query**: Manejo eficiente del estado del servidor y caché de datos.
+- **TailwindCSS**: Framework de utilidades CSS para el diseño y estilización rápida.
+- **Axios**: Para realizar peticiones HTTP a la API de backend.
+- **React DOM**: Para manipulación del DOM en aplicaciones React.
+- **React Hook Form**: Manejo de formularios de manera eficiente.
+- **React Toastify**: Para la gestión de notificaciones y mensajes emergentes (toasts).
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Requisitos
 
-- Configure the top-level `parserOptions` property like this:
+- **Node.js**: Versión 18.18.0 o superior.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Instalación
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+Para instalar las dependencias del proyecto, ejecuta el siguiente comando en la raíz del proyecto:
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+```bash
+npm install
